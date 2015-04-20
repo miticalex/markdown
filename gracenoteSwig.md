@@ -76,6 +76,19 @@ _do_sample_trackid(
 ...
 ```
 
+Trying and succeeding to compile sample (and afterwards run) from these two separate files (`.h` & `.c`).
+
+After executing `make` using the instructions from the original `makefile` from the gracenote directory, file `sample` is made.. 
+```sh
+...
+...
+...
+**** ./sample up to date.
+```
+Now we can run `sample` file to see if it gets the tracks info and write them to the shell..
+
+`./sample`
+
 ### Writing Swig interface `.i` file
 
 As I figured out everything I need to do in swig interface `.i` file is to #include `gnsdk.h` library, define GNSDK specific datatypes and declare the three mentioned function, and thereby order SWIG to make the wrapper code for those functions..
@@ -156,7 +169,7 @@ Now, you have to make object (`o`) files from wrapper file `musicid_file_trackid
 
 After making the `.so`, use make install command to make the ruby module. In order to do that, you must fisrt create a ruby `Makefile`.
 
-Here is the way to do that:
+Commands for doing this:
 
 
 
