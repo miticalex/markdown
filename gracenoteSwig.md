@@ -81,7 +81,7 @@ _do_sample_trackid(
 As I figured out everything I need to do in swig interface `.i` file is to #include `gnsdk.h` library, define GNSDK specific datatypes and declare the three mentioned function, and thereby order SWIG to make the wrapper code for those functions..
 It is also needed to define if GNSDK types act as input or output for certain functions.
 
-The `.i` file:
+The `.i` file (pay close attention to the comments):
 
 ```i
 %module musicid_file_albumid 
@@ -140,4 +140,15 @@ typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because
 
 ### Compiling
 To compile make the wrapper code using the swig `.i` file (and corresponding .h files), write this in linux shell:
-`
+
+`swig -[target_language] [file_name.i]`
+
+In this particular case, write:
+
+`swig -ruby musicid_file_trackid.i`
+
+By doing this we have made the wrapper `.c` file (`musicid_file_trackid_wrap.c`)
+
+Now, you have to write 
+
+
