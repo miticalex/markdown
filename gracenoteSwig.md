@@ -124,7 +124,7 @@ Result:
 	Match 5 - Album title:		Quest For Fire
 ```
 
-As the result of the execution of the `sample` is the same as before diving the file, now we know that we have done this part of the job well, and can proceed to the next step.
+As the result of the execution of the `sample` is the same as before diving the file, now we know that we have done this part of the job correctly, and can proceed to the next step.
 
 ### Writing Swig interface `.i` file
 
@@ -206,7 +206,22 @@ Now, you have to make object (`o`) files from wrapper file `musicid_file_trackid
 
 After making the `.so`, use make install command to make the ruby module. In order to do that, you must fisrt create a ruby `Makefile`.
 
-Commands for doing this:
+In order to do this, first create a ruby configuration file in the `musicid_file_trackid` directory, with which you will then create a makefile:
+
+make `conf.rb` file, that should look like this:
+
+```rb
+require 'mkmf'
+create_makefile('musicid_file_trackid')
+```
+
+Execute `conf.rb` file by typing `ruby conf.rb` in shell, to create a makefile... 
+
+Afterwards, you can create an `'.so'` file in two ways:
+
+1. Type make    
+
+
 
 
 
