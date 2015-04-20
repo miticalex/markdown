@@ -10,6 +10,7 @@ In order to wrap `dubset-gracenote` I first got a task to wrap `musicid_file_tra
 ------
 
 ### Dividing `main.c` file
+
 First thing that I have to do is to divide the `main.c` file into `musicid_file_trackid.h` and `main.c` files, in that:
 1. I have to seperate the declarations of `"public"` functions into `.h` file
 2. delete the declarations of the above mentioned functions in `.c` file.
@@ -75,6 +76,8 @@ _do_sample_trackid(
 ...
 ```
 
+### Writing Swig interface `.i` file
+
 As I figured out everything I need to do in swig interface `.i` file is to #include `gnsdk.h` library, define GNSDK specific datatypes and declare the three mentioned function, and thereby order SWIG to make the wrapper code for those functions..
 It is also needed to define if GNSDK types act as input or output for certain functions.
 
@@ -82,9 +85,9 @@ The `.i` file:
 
 ```i
 %module musicid_file_albumid 
-%include "typemaps.i"
+%include "typemaps.i" //necessary to include in orfer to use INPUT, OUTPUT and other typemaps
 
-%inline %{
+%inline %{      //
 typedef void gnsdk_void_t;
 typedef int gnsdk_uint32_t;
 	typedef gnsdk_void_t*        gnsdk_handle_t;
@@ -94,13 +97,9 @@ typedef int gnsdk_uint32_t;
 %}
 
 %{
-//	#include "gnsdk.h"	
-//	#include "../../../include/gnsdk_manager.h"
-//	#include "../../../include/gnsdk_defines.h"	
+	#include "gnsdk.h"	
 	#include "musicid_file_albumid.h"
-	//#define GNSDK_API	
-	//typedef unsigned int gnsdk_uint32_t;	
-	//typedef gnsdk_uint32_t gnsdk_error_t;
+	typedef unsigned int gnsdk_uint32_t;	
 %}
 
 
