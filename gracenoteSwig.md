@@ -219,7 +219,30 @@ Execute `conf.rb` file by typing `ruby conf.rb` in shell, to create a makefile..
 
 Afterwards, you can create an `'.so'` file in two ways:
 
-1. Type make    
+1. (in this case, this did not work, at least I haven't found a way to make it work. I will explain why later in `Problems that I encountered` section).
+ 
+  > Just type `make` in shell.
+
+    That will first make object `.o` files by compiling `..._wrap.c` and `.c` (if it exists), and it will make the corresponding `.o` files from them... Then it will link a shared `.so` object, in this case `musicid_file_trackid.so`.
+ 
+2. Make `.o` and `.so` files using a c compiler commands in shell
+ 
+    1. Make object `.o` files by compiling `..._wrap.c` and `.c` source files, with `gcc`, or any other suitable `c compiler`:
+    `gcc -c -fPIC source_file.c -I/include_directories`
+
+    For this particular case:
+    
+        -    `gcc -c -fPIC  musicid_file_trackid_wrap.c -I/home/alexander/.rvm/rubies/ruby-2.2.1/include/ruby-2.2.0 -I/home/alexander/.rvm/rubies/ruby-2.2.1/include/ruby-2.2.0/x86_64-linux` 
+        
+        (With `-I/` we included the paths where `ruby.h` and `include/config.h` headers are situated. These files are often not in these directories. To find their location on the disc, we can use `find ~ |grep config.h|grep ruby` and `find ~ |grep ruby.h`)
+    
+        -   `gcc -c -fPIC  main.c -I/../../include`
+        
+        (With `-I/` we included the path where `gnsdk.h` header is situated) 
+        
+        -   If you have successufully compiled `.c` files, and created `.o` files, we can procees to the step __2.__ below 
+
+    2. 
 
 
 
