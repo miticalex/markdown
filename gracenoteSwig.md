@@ -85,9 +85,46 @@ After executing `make` using the instructions from the original `makefile` from 
 ...
 **** ./sample up to date.
 ```
-Now we can run `sample` file to see if it gets the tracks info and write them to the shell..
+Now that we have tha `sample` file we can check with the following commands if it gets the tracks info and write them to the shell:
 
-`./sample`
+`./sample clientid clientidtag license [local/online]` or with parameters:
+
+`./sample 15534080 95C19687C4B13C876297F1AE9ACEB3FF ../dubset-gracenote/bin/Dubset_GNSDK_Evaluation_License_File.txt online`
+
+Result:
+
+```sh
+...
+...
+...
+*File 4 of 6*
+
+	Multiple results.
+	Album count: 5
+	Match 1 - Album title:		Pretty Polly
+	Match 2 - Album title:		Country Blues
+	Match 3 - Album title:		Famous Hits by Dock Boggs
+	Match 4 - Album title:		Sånger Om Kärlek [Disc 2]
+	Match 5 - Album title:		His Folkways Years 1963-1968 [Disc 2]
+
+*File 5 of 6*
+
+	Multiple results.
+	Album count: 1
+	Match 1 - Album title:		Quest For Fire: Firestarter Vol. 1
+
+*File 6 of 6*
+
+	Multiple results.
+	Album count: 5
+	Match 1 - Album title:		Quest For Fire: Firestarter Vol. 1
+	Match 2 - Album title:		New English File Advanced [Disc 2]
+	Match 3 - Album title:		Jazzblues
+	Match 4 - Album title:		51st Anniversary The Story of Life [Disc 5]
+	Match 5 - Album title:		Quest For Fire
+```
+
+As the result of the execution of the `sample` is the same as before diving the file, now we know that we have done this part of the job well, and can proceed to the next step.
 
 ### Writing Swig interface `.i` file
 
@@ -170,6 +207,8 @@ Now, you have to make object (`o`) files from wrapper file `musicid_file_trackid
 After making the `.so`, use make install command to make the ruby module. In order to do that, you must fisrt create a ruby `Makefile`.
 
 Commands for doing this:
+
+
 
 
 
