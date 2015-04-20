@@ -87,10 +87,10 @@ The `.i` file:
 %module musicid_file_albumid 
 %include "typemaps.i" //necessary to include in order to use INPUT, OUTPUT and other typemaps
 
-%inline %{                  // %{ %} braces are used to copy the code inside braces directly to the wrapper file
+%inline %{                  // %{ %} braces are used to copy the code inside 'em directly to the wrapper file
 typedef void gnsdk_void_t;  // %inline %{ %} does the above mentioned, plus generates the wrapper code
-typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because SWIG needs to know about the type
-	typedef gnsdk_void_t*        gnsdk_handle_t;    //before wrapping it
+typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because SWIG has to know about
+	typedef gnsdk_void_t*        gnsdk_handle_t;    //the types before wrapping it
 	#define GNSDK_DECLARE_HANDLE(handle)     struct Phandle##_s { gnsdk_uint32_t magic; }; typedef struct Phandle##_s* handle
 //#endif /* GNSDK_HANDLE_T */
 	GNSDK_DECLARE_HANDLE( gnsdk_user_handle_t );
@@ -98,13 +98,13 @@ typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because
                             // ".i" file
 %{
 	#include "gnsdk.h"	// decided not to include it because I don't need whole GNSDK library,
-                    	//but just a few type definitinitions
+                    	// but just a few type definitinitions
 	#include "musicid_file_albumid.h"
 	typedef unsigned int gnsdk_uint32_t;	
 %}
 
 
-	//  #ifndef GNSDK_HANDLE_T
+//  #ifndef GNSDK_HANDLE_T      //Wrote before I figured out that i must wrap it with %inline %{
 //	#define GNSDK_HANDLE_T
 //	typedef void gnsdk_void_t;
 //	typedef int gnsdk_uint32_t;
@@ -113,8 +113,8 @@ typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because
 	//  #endif /* GNSDK_HANDLE_T */
 //	GNSDK_DECLARE_HANDLE( gnsdk_user_handle_t );
 
-static int
-	_init_gnsdk(
+/*static*/ int      //functions don't need to be static, so I changed that, because it causes
+	_init_gnsdk(    //certain problems with wrapping
 	const char*          client_id,
 	const char*          client_id_tag,
 	const char*          client_app_version,
@@ -123,12 +123,12 @@ static int
 	gnsdk_user_handle_t* OUTPUT//p_user_handle
 	);
 
-static void
+/*static*/ void
 	_shutdown_gnsdk(
 	gnsdk_user_handle_t INPUT//user_handle
 	);
 
-static int
+/*static*/ int
 	_do_sample_trackid(
 	gnsdk_user_handle_t INPUT,//user_handle,
 	int                 use_local,
