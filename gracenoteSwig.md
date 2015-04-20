@@ -105,7 +105,7 @@ typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because
 
 
 //  #ifndef GNSDK_HANDLE_T      //Wrote before I figured out that i must wrap it with %inline %{
-//	#define GNSDK_HANDLE_T
+//	#define GNSDK_HANDLE_T      //This part of the code in unnecessary and can be deleted
 //	typedef void gnsdk_void_t;
 //	typedef int gnsdk_uint32_t;
 //	typedef gnsdk_void_t*        gnsdk_handle_t;
@@ -138,4 +138,6 @@ typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because
 ```
 
 
-
+### Compiling
+To compile make the wrapper code using the swig `.i` file (and corresponding .h files), write this in linux shell:
+`
