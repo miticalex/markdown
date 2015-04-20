@@ -10,8 +10,132 @@ In order to wrap `dubset-gracenote` I first got a task to wrap `musicid_file_tra
 ------
 
 ### Dividing `main.c` file
-First thing that I did was dividing the `main.c` file into `musicid_file_trackid.h` and `musicid_file_trackid.c` files, in that:
-1. I seperated the declarations of `"public"` functions into `.h` file
-2. deleted the `main()` function and the declarations of the above mentioned functions in `.c` file.
-3. 
+First thing that I have to do is to divide the `main.c` file into `musicid_file_trackid.h` and `main.c` files, in that:
+1. I have to seperate the declarations of `"public"` functions into `.h` file
+2. delete the declarations of the above mentioned functions in `.c` file.
+
+```c
+/* musicid_file_trackid.h */
+static int
+_init_gnsdk(
+	const char*          client_id,
+	const char*          client_id_tag,
+	const char*          client_app_version,
+	const char*          license_path,
+	int                  use_local,
+	gnsdk_user_handle_t* p_user_handle
+	);
+
+static void
+_shutdown_gnsdk(
+	gnsdk_user_handle_t user_handle
+	);
+
+static int
+_do_sample_trackid(
+	gnsdk_user_handle_t user_handle,
+	int                 use_local,
+	gnsdk_uint32_t      midf_options
+	);
+```
+
+I `.c` file I put the `_init_gnsdk`, `_shutdown_gnsdk` and `_do_sample_trackid` into comments section.
+```
+/* main.c */
+...
+...
+...
+/*****************************************
+ *    Local Function Declarations
+ **********************************************/
+/* static int           
+_init_gnsdk(
+	const char*          client_id,
+	const char*          client_id_tag,
+	const char*          client_app_version,
+	const char*          license_path,
+	int                  use_local,
+	gnsdk_user_handle_t* p_user_handle
+	);
+
+static void
+_shutdown_gnsdk(
+	gnsdk_user_handle_t user_handle
+	);
+
+static int
+_do_sample_trackid(
+	gnsdk_user_handle_t user_handle,
+	int                 use_local,
+	gnsdk_uint32_t      midf_options
+	);
+*/
+...
+...
+...
+```
+
+As I figured out everything I need to do in swig interface `.i` file is to #include `gnsdk.h` library, define GNSDK specific datatypes and declare the three mentioned function, and thereby order SWIG to make the wrapper code for those functions..
+It is also needed to define if GNSDK types act as input or output for certain functions.
+
+The `.i` file:
+
+```i
+%module musicid_file_albumid 
+%include "typemaps.i"
+
+%inline %{
+typedef void gnsdk_void_t;
+typedef int gnsdk_uint32_t;
+	typedef gnsdk_void_t*        gnsdk_handle_t;
+	#define GNSDK_DECLARE_HANDLE(handle)     struct Phandle##_s { gnsdk_uint32_t magic; }; typedef struct Phandle##_s* handle
+//#endif /* GNSDK_HANDLE_T */
+	GNSDK_DECLARE_HANDLE( gnsdk_user_handle_t );
+%}
+
+%{
+//	#include "gnsdk.h"	
+//	#include "../../../include/gnsdk_manager.h"
+//	#include "../../../include/gnsdk_defines.h"	
+	#include "musicid_file_albumid.h"
+	//#define GNSDK_API	
+	//typedef unsigned int gnsdk_uint32_t;	
+	//typedef gnsdk_uint32_t gnsdk_error_t;
+%}
+
+
+	//  #ifndef GNSDK_HANDLE_T
+//	#define GNSDK_HANDLE_T
+//	typedef void gnsdk_void_t;
+//	typedef int gnsdk_uint32_t;
+//	typedef gnsdk_void_t*        gnsdk_handle_t;
+//	#define GNSDK_DECLARE_HANDLE(handle)     struct Phandle##_s { gnsdk_uint32_t magic; }; typedef struct Phandle##_s* handle
+	//  #endif /* GNSDK_HANDLE_T */
+//	GNSDK_DECLARE_HANDLE( gnsdk_user_handle_t );
+
+static int
+	_init_gnsdk(
+	const char*          client_id,
+	const char*          client_id_tag,
+	const char*          client_app_version,
+	const char*          license_path,
+	int                  use_local,
+	gnsdk_user_handle_t* OUTPUT//p_user_handle
+	);
+
+static void
+	_shutdown_gnsdk(
+	gnsdk_user_handle_t INPUT//user_handle
+	);
+
+static int
+	_do_sample_trackid(
+	gnsdk_user_handle_t INPUT,//user_handle,
+	int                 use_local,
+	gnsdk_uint32_t      midf_options
+	);
+
+```
+
+
 
