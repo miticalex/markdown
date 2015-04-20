@@ -138,7 +138,8 @@ typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because
 ```
 
 
-### Compiling
+### Compiling & making the `ruby module`
+
 To compile make the wrapper code using the swig `.i` file (and corresponding .h files), write this in linux shell:
 
 `swig -[target_language] [file_name.i]`
@@ -149,6 +150,14 @@ In this particular case, write:
 
 By doing this we have made the wrapper `.c` file (`musicid_file_trackid_wrap.c`)
 
-Now, you have to write 
+--------
+
+Now, you have to make object (`o`) files from wrapper file `musicid_file_trackid_wrap.c` and original `.c` file (if it existed) `musicid_file_trackid.c`, which you will then use to make a shared object (`.so`) file `musicid_file_trackid.so`.
+
+After making the `.so`, use make install command to make the ruby module. In order to do that, you must fisrt create a ruby `Makefile`.
+
+Here is the way to do that:
+
+
 
 
