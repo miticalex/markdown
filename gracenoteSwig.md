@@ -1,21 +1,19 @@
 # Table of Contents
-1. [ Dividing main.c file](### 1. Dividing main.c file)
-2. [ Writing Swig interface `.i` file](### 2. Writing Swig interface `.i` file)
-3. [ Compiling & making the `ruby module`](### 3. Compiling & making the `ruby module`)
-4. [ Problems that I encountered in making the `musicid_file_trackid` wrapper and module so far](### 4. Problems that I encountered in making the `musicid_file_trackid` wrapper and module so far)
+1. [ Dividing main.c file](#1-dividing-mainc-file)
+2. [ Writing Swig interface `.i` file](#2-writing-swig-interface-i-file)
+3. [ Compiling & making the `ruby module`](#3-compiling--making-the-ruby-module)
+4. [ Problems that I encountered in making the `musicid_file_trackid` wrapper and module so far](#4-problems-that-i-encountered-in-making-the-musicid_file_trackid-wrapper-and-module-so-far)
 
-    4.1. [ `Including "gnsdk.h"` header in compiling with `make` (through the process of creating a Makefile)](#### 4.1. `Including "gnsdk.h"` header in compiling with `make` (through the process of creating a Makefile))
+    4.1. [ `Including "gnsdk.h"` header in compiling with `make` (through the process of creating a Makefile)](#41-including-gnsdkh-header-in-compiling-with-make-through-the-process-of-creating-a-makefile)
     
-    4.2. [ Conclusion that I don't have to include the whole `gnsdk.h` header file](#### 4.2. Conclusion that I don't have to include the whole `gnsdk.h` header file)
+    4.2. [ Conclusion that I don't have to include the whole `gnsdk.h` header file](#42-conclusion-that-i-dont-have-to-include-the-whole-gnsdkh-header-file)
     
-    4.3. [ Used, but not defined `static` functions](#### 4.3. Used, but not defined `static` functions)
+    4.3. [ Used, but not defined `static` functions](#43-used-but-not-defined-static-functions)
      
-    4.4. [ Wrapping `musicid_file_albumid`](#### 4.4. Wrapping `musicid_file_albumid`)
+    4.4. [ Wrapping `musicid_file_albumid`](#44-wrapping-musicid_file_albumid)
 
-5. [ What I did so far, how do I plan to continue/finish the job later, and how I suggest the others to finish the job if someone else accepts the responsibility to finish the it.](### 5. What I did so far, how do I plan to continue/finish the job later, and how I suggest the others to finish the job if someone else accepts the responsibility to finish the it.)
+5. [ What I did so far, how do I plan to continue/finish the job later, and how I suggest the others to finish the job if someone else accepts the responsibility to finish the it.](#5-what-i-did-so-far-how-do-i-plan-to-continuefinish-the-job-later-and-how-i-suggest-the-others-to-finish-the-job-if-someone-else-accepts-the-responsibility-to-finish-the-it)
 
-## 1. Dividing main.c file
-## Example2
 
 
 # WRAPPING `dubset-gracenote` in Ruby with SWIG
