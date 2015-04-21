@@ -222,7 +222,7 @@ Execute `conf.rb` file by typing `ruby conf.rb` in shell, to create a makefile..
 
 Afterwards, you can create an `'.so'` file in two ways:
 
-1. (in this case, this did not work, at least I haven't found a way to make it work. I will explain why later in `Problems that I encountered` section).
+1. (in this case, this did not work, because I didn't know how to include `gnsdk.h` in creating a `makefile`. That header is needed to compile `main.o`... At least I haven't found a way to make it work. I will explain why later in `Problems that I encountered` section).
  
   > Just type `make` in shell.
 
@@ -254,7 +254,62 @@ After making the `.so` file we can create a ruby module by typing `make install`
 
 Now you can use this module by writing `require "musicid_file_trackid"` and access its functions/methods through module `Musicid_file_trackid`.
 
-### Prtomlems that I encountered in making the wrapper and module so far
+`
+
+### Problems that I encountered in making the `musicid_file_trackid` wrapper and module so far
+---
+
+`
+#### `Including "gnsdk.h"` header in compiling with `make` (through the process of creating a Makefile)
+
+To include a path where this header is located, I changes `conf.rb` file in the following way:
+```rb
+require 'mkmf'
+# Use the code from the row below (find_header('','')) if you know the exact location of the file,
+# otherwise write three rows that follow (path = File.realdirpath... ...) 
+# find_header('gnsdk.h', '/home/alexander/Work/Study/SWIG/GNSDK/include/gnsdk.h') 
+path = File.realdirpath('../../../../include', __FILE__)
+puts path 
+find_header('gnsdk.h', path)
+create_makefile('musicid_file_trackid')
+```
+Even though the file `gnsdk.h` does exist in the `/home/alexander/Work/Study/SWIG/GNSDK/include` directory, I got this answer:
+```sh
+$ ruby conf.rb
+/home/alexander/Work/Study/SWIG/GNSDK/include
+checking for gnsdk.h in /home/alexander/Work/Study/SWIG/GNSDK/include... no
+```
+I really don't know what I did wrong, so I decided to make `.o` and `.so files with `gcc`.
+
+#### Conclusion that I don't have to include the whole `gnsdk.h` header file
+
+
+Meanwhile, I realized that I don't have to include whole `gnsdk.h` header in swig interface `.i` file, because I wrap only a few file definitions (in `main.c` it is of course necessaryto include `gnsdk.h`). It is enough to define the datatypes that are used by the wrapped functions (and corresponding wrapper code for those datatypes):
+
+"musicid_file_trackid.i":
+```i
+...
+%{
+    #include "gnsdk.h"    // decided not to include it because I don't need whole GNSDK library,
+                        // but just a few type definitinitions
+    ...
+    ...   
+%}
+...
+...
+%inline %{                  // %{ %} braces are used to copy the code inside 'em directly to the wrapper file
+typedef void gnsdk_void_t;  // %inline %{ %} does the above mentioned, plus generates the wrapper code
+typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because SWIG has to know about
+    typedef gnsdk_void_t*        gnsdk_handle_t;    //the types before wrapping it
+    #define GNSDK_DECLARE_HANDLE(handle)     struct Phandle##_s { gnsdk_uint32_t magic; }; typedef struct Phandle##_s* handle
+    GNSDK_DECLARE_HANDLE( gnsdk_user_handle_t );
+%}                          //it is also necessary to put this typedefs before the usages of those types in 
+                            // ".i" file
+```
+
+
+#### `static` functions
+After doing all this corrections I  uwns still wbe to `.so` file
 
 
 
