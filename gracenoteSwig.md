@@ -1,3 +1,6 @@
+[TOC]
+
+
 # WRAPPING `dubset-gracenote` in Ruby with SWIG
 -------
 
@@ -225,7 +228,7 @@ Afterwards, you can create an `'.so'` file in two ways:
 
     That will first make object `.o` files by compiling `..._wrap.c` and `.c` (if it exists), and it will make the corresponding `.o` files from them... Then it will link a shared `.so` object, in this case `musicid_file_trackid.so`.
  
-2. Make `.o` and `.so` files using a c compiler commands in shell
+2. Make `.o` and `.so` files using a c compiler
  
     1. Make object `.o` files by compiling `..._wrap.c` and `.c` source files, with `gcc`, or any other suitable `c compiler`:
     `gcc -c -fPIC source_file.c -I/include_directories`
@@ -242,7 +245,16 @@ Afterwards, you can create an `'.so'` file in two ways:
         
         -   If you have successufully compiled `.c` files, and created `.o` files, we can procees to the step __2.__ below 
 
-    2. 
+    2. Make `.so` shared object file, using the following commands:
+    
+    `gcc -shared musicid_file_trackid_wrap.o main.o -o musicid_file_trackid.so`
+
+
+After making the `.so` file we can create a ruby module by typing `make install`.
+
+Now you can use this module by writing `require "musicid_file_trackid"` and access its functions/methods through module `Musicid_file_trackid`.
+
+### Prtomlems that I encountered in making the wrapper and module so far
 
 
 
