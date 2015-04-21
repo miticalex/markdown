@@ -1,4 +1,9 @@
-[TOC]
+# Table of Contents
+1. [ 1. Dividing main.c file](# 1. Dividing main.c file)
+2. [Example2](#example2)
+
+## 1. Dividing main.c file
+## Example2
 
 
 # WRAPPING `dubset-gracenote` in Ruby with SWIG
@@ -317,15 +322,15 @@ To find out what is wrong I decided to write some `analogous example programs` a
 
 After a few days of battling with those problems I couldn't realize the difference between wrapping my examples and `musicid_file_trackid`, because I really made completely analogous examples. At leaat I thought so...
 
-S I tried   to wrap `musicid_file_albumid` to see if I would encounter the same problems..
+To gain a better grasp of what and where the problem is I tried  to wrap `musicid_file_albumid` to see if I would encounter the same problems..
 
 
-- ##### Wrapping `musicid_file_albumid`
+### 4.4. Wrapping `musicid_file_albumid`
 
-    ---
-    As `musicid_file_album_id` and `musicid_file_tracid` used the functions with the same names and arguments, I divided `main.c` using the same pattern, and just coppied the content of `musicid_file_trackid` to `musicid_file_albumid`.
+
+As `musicid_file_album_id` and `musicid_file_tracid` used the functions with the same names and arguments, I divided `main.c` using the same pattern, and just coppied the content of `musicid_file_trackid` to `musicid_file_albumid`.
   
-    The problem remained the same.. So I had to realize what was the difference between the functions from my examples and the functions wrote in `gnsdk.h` samples, and I realized the only difference was that `gnsdk.h` functions were `static`.. As it was not relevant the behavior if the functions were `static` or not, I decided to simple remove the `static` keyword from function declaration and definition, both in `.c` and `.i` files:
+The problem remained the same.. So I had to realize what was the difference between the functions from my examples and the functions wrote in `gnsdk.h` samples, and I realized the only difference was that `gnsdk.h` functions were `static`.. As it was not relevant the behavior if the functions were `static` or not, I decided to simple remove the `static` keyword from function declaration and definition, both in `.c` and `.i` files:
     
 ```
 ...
@@ -392,13 +397,26 @@ err, handle = Musicid_file_trackid._init_gnsdk("15534080","95C19687C4B13C876297F
 ```
 That should store the error code in `err` variable, and gnsdk handle pointer that points to `gnsdk_user_handle_t` file/record in `handle` variable. Instead, Ruby returns me the following message:
 ```
-2.2.1 :004 > error, handle = Musicid_file_albumid._init_gnsdk("15534080","95C19687C4B13C876297F1AE9ACEB3FF","1","../dubset-gracenote/bin/Dubset_GNSDK_Evaluation_License_File.txt",0) 
+2.2.1 :004 > err, handle = Musicid_file_albumid._init_gnsdk("15534080","95C19687C4B13C876297F1AE9ACEB3FF","1","../dubset-gracenote/bin/Dubset_GNSDK_Evaluation_License_File.txt",0) 
 ArgumentError: wrong # of arguments(5 for 6)
 	from (irb):4:in `_init_gnsdk'
 	from (irb):4
 	from /home/alexander/.rvm/rubies/ruby-2.2.1/bin/irb:11:in `<main>'
 ```
-My supposition is that either it is necessary to extend `gnsdk_user_handle_t` datatype, and provide it with constructor, with wieiehiccan ficreateinsdk i
+My supposition is that it is necessary to extend `gnsdk_user_handle_t` datatype, and provide it with constructor, with which we can create new `NULL` `gnsdk_user_handle_t*`. For informtation about extending the existing datatype/struct with SWIG, see [5.5.6 Adding member functions to C structures](http://www.swig.org/Doc3.0/SWIGDocumentation.html#SWIG_adding_member_functions)
+
+I think that after creating a `handle` of `gnsdk_user_handle_t*` datatype it would be possible for it to fetch the return value of the function, using the `err, handle = Musicid_file_albumid._init_gnsdk("15534080","95C19687C4B13C876297F1AE9ACEB3FF","1","../dubset-gracenote/bin/Dubset_GNSDK_Evaluation_License_File.txt",0) ` code.
+
+At least it would be possible to initialize handle with the following call: `err = Musicid_file_albumid._init_gnsdk("15534080","95C19687C4B13C876297F1AE9ACEB3FF","1","../dubset-gracenote/bin/Dubset_GNSDK_Evaluation_License_File.txt",0, handle)`, which should store the initialized handle as a side effect.
+
+----
+
+
+If this doesn't give the wanted result, see:
+- [10 Argument Handling](http://www.swig.org/Doc3.0/SWIGDocumentation.html#Arguments) to customize handling the arguments
+- [11 Typemaps](http://www.swig.org/Doc3.0/SWIGDocumentation.html#Arguments) to modify/customize SWIG's behavior.
+- [38.5 Input and output parameters](http://www.swig.org/Doc3.0/SWIGDocumentation.html#Ruby_nn32) to customize handling the arguments with SWIG interface file for Ruby.
+- [38.7 Typemaps](http://www.swig.org/Doc3.0/SWIGDocumentation.html#Ruby_nn37) to modify/customize SWIG's behavior for Ruby
 
 
 
