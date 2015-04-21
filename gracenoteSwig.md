@@ -328,7 +328,8 @@ S I tried   to wrap `musicid_file_albumid` to see if I would encounter the same 
     The problem remained the same.. So I had to realize what was the difference between the functions from my examples and the functions wrote in `gnsdk.h` samples, and I realized the only difference was that `gnsdk.h` functions were `static`.. As it was not relevant the behavior if the functions were `static` or not, I decided to simple remove the `static` keyword from function declaration and definition, both in `.c` and `.i` files:
     
 ```
-    
+...
+...
 /*static*/ int      //functions don't need to be static, so I changed that, because it causes
     _init_gnsdk(    //certain problems with wrapping
     const char*          client_id,
@@ -350,6 +351,8 @@ S I tried   to wrap `musicid_file_albumid` to see if I would encounter the same 
     int                 use_local,
     gnsdk_uint32_t      midf_options
     );
+...
+...
 ```
 
 
@@ -357,9 +360,45 @@ After removing the `static` keyword, there was no problem in making the `musicid
 
 `
 
-### 5. What I did so far, and how do I plan to continue/finish the job later
+### 5. What I did so far, how do I plan to continue/finish the job later, and how I suggest the others to finish the job if someone else accepts the responsibility to finish the it.
 
-    After solving the problems with compiling, includes, static functions, etc. the only thing I managed to do is to 
+After solving the problems with compiling, includes, static functions, etc. the only thing I managed to do is to     successufully require `musicid_file_trackid` and `musicid_file_albumid`. 
+```rb
+2.2.1 :001 > require 'musicid_file_albumid'
+ => true 
+ ```
+ ```rb
+2.2.1 :001 > require 'musicid_file_trackid'
+ => true 
+ ```
+ I can call the corresponding functions using the `Musicid_file_trackid` module, with commands `Musicid_file_trackid._initgnsdk(arguments)`, `Musicid_file_trackid._do_sample_trackid(arguments)` and `Musicid_file_trackid._shutdown_gnsdk(arguments)`.
+ 
+As I have defined 6th argument `gnsdk user_handle_t*` as output:
+ ```i
+ /*static*/ int      //functions don't need to be static, so I changed that, because it causes
+    _init_gnsdk(    //certain problems with wrapping
+    const char*          client_id,
+    const char*          client_id_tag,
+    const char*          client_app_version,
+    const char*          license_path,
+    int                  use_local,
+    gnsdk_user_handle_t* OUTPUT//p_user_handle
+    );
+```
+ 
+I should be able to init gnsdk with the following call:
+```
+err, handle = Musicid_file_trackid._init_gnsdk("15534080","95C19687C4B13C876297F1AE9ACEB3FF","1","../dubset-gracenote/bin/Dubset_GNSDK_Evaluation_License_File.txt",0)
+```
+That should store the error code in `err` variable, and gnsdk handle pointer that points to `gnsdk_user_handle_t` file/record in `handle` variable. Instead, Ruby returns me the following message:
+```
+2.2.1 :004 > error, handle = Musicid_file_albumid._init_gnsdk("15534080","95C19687C4B13C876297F1AE9ACEB3FF","1","../dubset-gracenote/bin/Dubset_GNSDK_Evaluation_License_File.txt",0) 
+ArgumentError: wrong # of arguments(5 for 6)
+	from (irb):4:in `_init_gnsdk'
+	from (irb):4
+	from /home/alexander/.rvm/rubies/ruby-2.2.1/bin/irb:11:in `<main>'
+```
+My supposition is that either it is necessary to extend `gnsdk_user_handle_t` datatype, and provide it with constructor, with wieiehiccan ficreateinsdk i
 
 
 
