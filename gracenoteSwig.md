@@ -424,7 +424,7 @@ At least it would be possible to initialize handle with the following call: `err
 ----
 
 
-If this doesn't give the wanted result, see:
+If this doesn't give the wanted result, see [SWIG DOCUMENTATION 3.0](http://www.swig.org/Doc3.0/SWIGDocumentation.html):
 - [10 Argument Handling](http://www.swig.org/Doc3.0/SWIGDocumentation.html#Arguments) to customize handling the arguments
 - [11 Typemaps](http://www.swig.org/Doc3.0/SWIGDocumentation.html#Arguments) to modify/customize SWIG's behavior.
 - [38.5 Input and output parameters](http://www.swig.org/Doc3.0/SWIGDocumentation.html#Ruby_nn32) to customize handling the arguments with SWIG interface file for Ruby.
