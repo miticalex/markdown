@@ -12,7 +12,7 @@ In order to wrap `dubset-gracenote` I first got a task to wrap `musicid_file_tra
 ## Wrapping `GNSDK/samples/musicid_file_trackid/`
 ------
 
-### Dividing `main.c` file
+### 1. Dividing `main.c` file
 
 First thing that I have to do is to divide the `main.c` file into `musicid_file_trackid.h` and `main.c` files, in that:
 1. I have to seperate the declarations of `"public"` functions into `.h` file
@@ -129,7 +129,7 @@ Result:
 
 As the result of the execution of the `sample` is the same as before diving the file, now we know that we have done this part of the job correctly, and can proceed to the next step.
 
-### Writing Swig interface `.i` file
+### 2. Writing Swig interface `.i` file
 
 As I figured out everything I need to do in swig interface `.i` file is to #include `gnsdk.h` library, define GNSDK specific datatypes and declare the three mentioned function, and thereby order SWIG to make the wrapper code for those functions..
 It is also needed to define if GNSDK types act as input or output for certain functions.
@@ -191,7 +191,7 @@ typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because
 ```
 
 
-### Compiling & making the `ruby module`
+### 3. Compiling & making the `ruby module`
 
 To compile make the wrapper code using the swig `.i` file (and corresponding .h files), write this in linux shell:
 
@@ -256,11 +256,11 @@ Now you can use this module by writing `require "musicid_file_trackid"` and acce
 
 `
 
-### Problems that I encountered in making the `musicid_file_trackid` wrapper and module so far
+### 4. Problems that I encountered in making the `musicid_file_trackid` wrapper and module so far
 ---
 
 `
-#### `Including "gnsdk.h"` header in compiling with `make` (through the process of creating a Makefile)
+#### 4.1. `Including "gnsdk.h"` header in compiling with `make` (through the process of creating a Makefile)
 
 To include a path where this header is located, I changes `conf.rb` file in the following way:
 ```rb
@@ -281,7 +281,7 @@ checking for gnsdk.h in /home/alexander/Work/Study/SWIG/GNSDK/include... no
 ```
 I really don't know what I did wrong, so I decided to make `.o` and `.so files with `gcc`.
 
-#### Conclusion that I don't have to include the whole `gnsdk.h` header file
+#### 4.2. Conclusion that I don't have to include the whole `gnsdk.h` header file
 
 
 Meanwhile, I realized that I don't have to include whole `gnsdk.h` header in swig interface `.i` file, because I wrap only a few file definitions (in `main.c` it is of course necessaryto include `gnsdk.h`). It is enough to define the datatypes that are used by the wrapped functions (and corresponding wrapper code for those datatypes):
@@ -308,8 +308,60 @@ typedef int gnsdk_uint32_t; // for typedefs it is necerssary to do both, because
 ```
 
 
-#### `static` functions
-After doing all this corrections I  uwns still wbe to `.so` file
+#### 4.3. Used, but not defined `static` functions
+After these corrections I was still unable to make `.so` file.. I got only the warning that the three wrapped functions were `used but undefined`, so I could make the `.o` file, but when tried to make the `.so` file I got the message that it was impossible to link undefined functions..
+
+That was strange to me, because in order to make the wrapper module, the only necessary thing one has to do is to wrap the declaration of the function.. If the function is not defined problem should occur only when trying to call the function from Ruby. 
+
+To find out what is wrong I decided to write some `analogous example programs` and try to wrap them, and realiyed that I can easily wrap functions that user-defined datatypes, even if they are not declared..
+
+After a few days of battling with those problems I couldn't realize the difference between wrapping my examples and `musicid_file_trackid`, because I really made completely analogous examples. At leaat I thought so...
+
+S I tried   to wrap `musicid_file_albumid` to see if I would encounter the same problems..
+
+
+- ##### Wrapping `musicid_file_albumid`
+
+    ---
+    As `musicid_file_album_id` and `musicid_file_tracid` used the functions with the same names and arguments, I divided `main.c` using the same pattern, and just coppied the content of `musicid_file_trackid` to `musicid_file_albumid`.
+  
+    The problem remained the same.. So I had to realize what was the difference between the functions from my examples and the functions wrote in `gnsdk.h` samples, and I realized the only difference was that `gnsdk.h` functions were `static`.. As it was not relevant the behavior if the functions were `static` or not, I decided to simple remove the `static` keyword from function declaration and definition, both in `.c` and `.i` files:
+    
+```
+    
+/*static*/ int      //functions don't need to be static, so I changed that, because it causes
+    _init_gnsdk(    //certain problems with wrapping
+    const char*          client_id,
+    const char*          client_id_tag,
+    const char*          client_app_version,
+    const char*          license_path,
+    int                  use_local,
+    gnsdk_user_handle_t* OUTPUT//p_user_handle
+    );
+
+/*static*/ void
+    _shutdown_gnsdk(
+    gnsdk_user_handle_t INPUT//user_handle
+    );
+
+/*static*/ int
+    _do_sample_trackid(
+    gnsdk_user_handle_t INPUT,//user_handle,
+    int                 use_local,
+    gnsdk_uint32_t      midf_options
+    );
+```
+
+
+After removing the `static` keyword, there was no problem in making the `musicid_file_albumid.so` file with the above mentioned commands. With `make install` I then make a Ruby module which worked. As the problem with `musicid_file_trackid` was the same, after making these changes, `musicid_file_trackid` module was made without a problem.
+
+`
+
+### 5. What I did so far, and how do I plan to continue/finish the job later
+
+    After solving the problems with compiling, includes, static functions, etc. the only thing I managed to do is to 
+
+
 
 
 
